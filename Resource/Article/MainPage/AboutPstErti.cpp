@@ -12,10 +12,7 @@ struct PstErti
     std::string birthday = "2008/10/13";
 
     const bool isSensitive = true;
-    const bool isKind = true;
     const bool isReflective = true;
-    const bool isLonely = true;
-    const bool isResilient = true;
 
     static std::map<std::string, std::string> contactInfo;
 
