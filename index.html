@@ -1,1 +1,389 @@
-This is @PstErti's personal website. It's a work in progress, but feel free to look around!
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PstErti's Blog</title>
+    <style>
+        @font-face {
+            font-family: 'Cascadia Code';
+            src: url('Resource/Font/CASCADIACODE.TTF') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Source Han Sans & Saira Hybrid';
+            src: url('Resource/Font/SOURCE HAN SANS & SAIRA HYBRID-REGULAR.TTF') format('truetype');
+        }
+
+        .file-menu {
+            position: relative;
+            left: 0;
+            display: flex;
+            margin-left: auto;
+            color: #9e9e9e;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: 'Source Han Sans & Saira Hybrid', monospace;
+            border-radius: 4px;
+        }
+
+        .menu-item {
+            padding: 5px 10px;
+        }
+
+        .menu-item:hover {
+            background-color: #4d4d4d;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #2d2d2d;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .menu-option {
+            color: #d4d4d4;
+            padding: 8px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .menu-option:hover {
+            background-color: #4d4d4d;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-dropdown.show {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Source Han Sans & Saira Hybrid', monospace;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .editor {
+            max-width: 900px;
+            margin: 50px auto;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .title-bar {
+            background: #3c3c3c;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .dots {
+            display: flex;
+            margin-right: 15px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .dot-red {
+            background: #ff5f56;
+        }
+
+        .dot-yellow {
+            background: #ffbd2e;
+        }
+
+        .dot-green {
+            background: #27c93f;
+        }
+
+        .title {
+            font-size: 14px;
+            color: #9e9e9e;
+        }
+
+        .code-area {
+            background: #1e1e1e;
+            padding: 20px;
+            position: relative;
+        }
+
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 20px;
+            width: 40px;
+            text-align: right;
+            color: #858585;
+            user-select: none;
+        }
+
+        .line-number {
+            padding-right: 15px;
+        }
+
+        .code-content {
+            margin-left: 50px;
+            white-space: pre;
+            overflow-x: auto;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        .comment {
+            color: #6A9955;
+        }
+
+        .keyword {
+            color: #569CD6;
+        }
+
+        .string {
+            color: #CE9178;
+        }
+
+        .function {
+            color: #DCDCAA;
+        }
+
+        .number {
+            color: #B5CEA8;
+        }
+
+        .operator {
+            color: #D4D4D4;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: #569CD6
+            }
+        }
+
+        .typing {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid #569CD6;
+            animation:
+                typing 3.5s steps(40, end),
+                blink-caret .75s step-end infinite;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #858585;
+            font-size: 14px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 3s forwards;
+        }
+
+        .links {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .link {
+            color: #569CD6;
+            text-decoration: none;
+            transition: color 0.3s;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .link:hover {
+            color: #3794ff;
+        }
+
+        .link:nth-child(1) {
+            animation: fadeIn 0.5s ease-out 3.5s forwards;
+        }
+
+        .link:nth-child(2) {
+            animation: fadeIn 0.5s ease-out 3.7s forwards;
+        }
+
+        .link:nth-child(3) {
+            animation: fadeIn 0.5s ease-out 3.9s forwards;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="editor">
+        <div class="title-bar">
+            <div class="dots">
+                <div class="dot dot-red" onclick="window.close()"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+            </div>
+            <div class="title">AboutPstErti.cpp</div>
+            <div class="file-menu">
+                <span class="menu-item" id="fileMenuBtn">文件</span>
+                <div class="menu-dropdown" id="fileMenuDropdown">
+                    <div class="menu-option" onclick="loadFileContent('Resource/Article/MainPage/AboutPstErti.cpp')">
+                        AboutPstErti.cpp</div>
+                    <div class="menu-option" onclick="loadFileContent('Resource/Article/MainPage/test.txt')">
+                        test.txt
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="code-area">
+            <div class="line-numbers" id="lineNumbers">
+                <!-- Line numbers will be generated by JavaScript -->
+            </div>
+            <div class="code-content">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="links">
+        <a href="#" class="link">Blog</a>
+        <a href="#" class="link">Projects</a>
+        <a href="#" class="link">About</a>
+    </div>
+
+    <footer>
+        © 2024 PstErti. All rights reserved.
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始加载AboutPstErti.cpp文件
+            loadFileContent('Resource/Article/MainPage/AboutPstErti.cpp');
+
+            // 文件菜单点击事件
+            const fileMenuBtn = document.getElementById('fileMenuBtn');
+            const fileMenuDropdown = document.getElementById('fileMenuDropdown');
+            const codeContent = document.querySelector('.code-content');
+
+            function loadFileContent(filename) {
+                fileMenuDropdown.classList.remove('show');
+                fetch(filename)
+                    .then(response => {
+                        if (!response.ok) {
+                            if (response.status === 404) {
+                                throw new Error('文件未找到: ' + filename);
+                            }
+                            throw new Error('网络响应错误: ' + response.status);
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        // 清空原有内容
+                        codeContent.innerHTML = '';
+                        lineNumbers.innerHTML = '';
+
+                        // 按行分割内容并处理每一行
+                        const lines = data.split('\n');
+
+                        // 生成行号
+                        for (let i = 1; i <= lines.length; i++) {
+                            const lineNumber = document.createElement('div');
+                            lineNumber.className = 'line-number';
+                            lineNumber.textContent = i;
+                            lineNumbers.appendChild(lineNumber);
+                        }
+
+                        // 添加代码内容
+                        lines.forEach((line) => {
+                            const lineSpan = document.createElement('span');
+                            lineSpan.style.display = 'block';
+                            lineSpan.style.whiteSpace = 'pre';
+                            lineSpan.textContent = line || ' '; // 处理空行
+                            codeContent.appendChild(lineSpan);
+                        });
+
+                        // 更新标题并调整高度
+                        document.querySelector('.title').textContent = filename.split('/').pop();
+                        const codeArea = document.querySelector('.code-area');
+                        codeArea.style.minHeight = (lines.length * 20 + 40) + 'px';
+
+                        // 强制重排以确保正确渲染
+                        codeArea.offsetHeight;
+                    })
+                    .catch(error => {
+                        console.error('Error loading file:', error);
+                        codeContent.innerHTML = '<span class="error">加载文件错误: ' + error.message + '</span>';
+                        lineNumbers.innerHTML = '';
+
+                        // 重置标题
+                        document.querySelector('.title').textContent = '加载失败';
+
+                        // 重置代码区域高度
+                        const codeArea = document.querySelector('.code-area');
+                        codeArea.style.minHeight = '100px';
+                    });
+            }
+
+            fileMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                fileMenuDropdown.classList.toggle('show');
+            });
+
+            // 点击页面其他区域关闭菜单
+            document.addEventListener('click', function(e) {
+                if (!fileMenuBtn.contains(e.target) && !fileMenuDropdown.contains(e.target)) {
+                    fileMenuDropdown.classList.remove('show');
+                }
+            });
+
+            // 阻止菜单内部点击事件冒泡
+            fileMenuDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+
+        });
+    </script>
+</body>
+
+</html>
