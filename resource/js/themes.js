@@ -22,7 +22,9 @@ const ThemeManager = {
             titleBar: '#2d2d2d',
             accentColor: '#569CD6',
             accentColor2: '#9CDCFE',
-            logoTint: 'invert(23%) sepia(90%) saturate(1900%) hue-rotate(195deg) brightness(94%)'  // 深蓝色
+            logoTint: 'invert(23%) sepia(90%) saturate(1900%) hue-rotate(195deg) brightness(94%)',  // 深蓝色
+            link: '#0078d4',      // VSCode 蓝色
+            linkHover: '#3794ff'  // VSCode 亮蓝色
         },
         light: {
             background: '#ffffff',
@@ -46,7 +48,9 @@ const ThemeManager = {
             titleBar: '#f3f3f3',
             accentColor: '#0078D4',
             accentColor2: '#28A8EA',
-            logoTint: 'invert(70%) sepia(20%) saturate(1800%) hue-rotate(177deg) brightness(102%)'  // 浅蓝色
+            logoTint: 'invert(70%) sepia(20%) saturate(1800%) hue-rotate(177deg) brightness(102%)',  // 浅蓝色
+            colorLink: '#0078d4',      // VSCode 蓝色
+            colorLinkHover: '#3794ff'  // VSCode 亮蓝色
         }
     },
 

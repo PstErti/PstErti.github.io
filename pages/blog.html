@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - PstErti</title>
+    <link rel="stylesheet" href="../resource/css/code-frame.css">
+    <link rel="stylesheet" href="../resource/css/header.css">
+    <link rel="stylesheet" href="../resource/css/footer.css">
+    <script src="../resource/js/themes.js"></script>
+    <script src="../resource/js/config.js"></script>
+    <script src="../resource/js/header.js"></script>
+    <script src="../resource/js/footer.js"></script>
+    <script src="../resource/js/blog.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Cascadia Code';
+            src: local("Cascadia Code"),
+                local("Cascadia-Code"),
+                url("../resource/font/Cascadia Code/WOFF2.woff2") format("woff2"),
+                url("../resource/font/Cascadia Code/WOFF.woff") format("woff"),
+                url("../resource/font/Cascadia Code/EOT.eot") format("embedded-opentype"),
+                url("../resource/font/Cascadia Code/TrueType.ttf") format("truetype");
+        }
+
+        @font-face {
+            font-family: 'Source Han Sans & Saira Hybrid';
+            src: local("Source Han Sans & Saira Hybrid"),
+                local("Source-Han-Sans-&-Saira-Hybrid"),
+                url("../resource/font/Source Han Sans & Saira Hybrid/WOFF2.woff2") format("woff2"),
+                url("../resource/font/Source Han Sans & Saira Hybrid/WOFF.woff") format("woff"),
+                url("../resource/font/Source Han Sans & Saira Hybrid/EOT.eot") format("embedded-opentype"),
+                url("../resource/font/Source Han Sans & Saira Hybrid/TrueType.ttf") format("truetype");
+        }
+
+        :root {
+            --code-line-height: 24px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-background, #1e1e1e);
+            color: var(--color-foreground, #d4d4d4);
+            font-family: 'Source Han Sans & Saira Hybrid', monospace;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--color-background);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div id="header"></div>
+        <div class="content">
+        </div>
+    </div>
+</body>
+
+</html>

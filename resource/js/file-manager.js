@@ -1,12 +1,42 @@
 class FileManager {
     constructor() {
+        // 将初始化延迟到 DOMContentLoaded 事件
+        document.addEventListener('DOMContentLoaded', () => {
+            this.initializeElements();
+        });
+    }
+
+    initializeElements() {
         this.dropdownElement = document.getElementById('fileMenuDropdown');
         this.codeContent = document.querySelector('.code-frame__code');
         this.lineNumbers = document.querySelector('.code-frame__line-numbers');
         this.titleElement = document.querySelector('.title');
         this.menuBtn = document.getElementById('fileMenuBtn');
-        this.isMenuOpen = false;
-        this.init();
+
+        if (this.validateElements()) {
+            this.isMenuOpen = false;
+            this.init();
+        }
+    }
+
+    validateElements() {
+        const elements = {
+            'dropdownElement': this.dropdownElement,
+            'codeContent': this.codeContent,
+            'lineNumbers': this.lineNumbers,
+            'titleElement': this.titleElement,
+            'menuBtn': this.menuBtn
+        };
+
+        const missingElements = Object.entries(elements)
+            .filter(([_, element]) => !element)
+            .map(([name]) => name);
+
+        if (missingElements.length > 0) {
+            console.error('缺少必要元素:', missingElements.join(', '));
+            return false;
+        }
+        return true;
     }
 
     init() {
@@ -145,5 +175,7 @@ class FileManager {
     }
 }
 
-// 创建全局实例
-window.fileManager = new FileManager();
+// 改为在DOMContentLoaded事件中创建实例
+document.addEventListener('DOMContentLoaded', () => {
+    window.fileManager = new FileManager();
+});

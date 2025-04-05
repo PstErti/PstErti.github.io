@@ -1,59 +1,268 @@
+/* VSCode风格变量 */
+:root {
+    --color-titleBar: #252526;
+    --color-background: #1e1e1e;
+    --color-menuText: #d4d4d4;
+    --color-menuDropdownBg: #252526;
+    --color-menuOptionHover: #094771;
+}
+
+.main-container {
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 60px;
+    /* 减小顶部内边距，为页眉留出空间 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--color-background);
+    position: relative;
+}
+
+/* 集成 editor 样式 */
 .code-frame {
-    background-color: var(--color-background);
+    width: calc(100% - 60px);
+    max-width: 900px;
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    min-height: 400px;
+    background: var(--color-background);
+    min-height: 500px;
     display: flex;
     flex-direction: column;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* 响应式布局 */
+@media screen and (max-width: 768px) {
+    .code-frame {
+        width: calc(100% - 40px);
+    }
+
+    .main-container {
+        padding: 80px 0 30px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .code-frame {
+        width: calc(100% - 30px);
+        margin: 80px auto 20px;
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    .code-frame {
+        max-width: 1200px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .code-frame {
+        width: calc(100% - 20px);
+        margin: 70px auto 15px;
+    }
 }
 
 .code-frame__title-bar {
-    background: var(--color-titleBar);
-    padding: 8px 15px;
     display: flex;
     align-items: center;
+    padding: 8px 15px;
+    background: var(--color-titleBar);
+    border-bottom: 1px solid #1e1e1e;
+    height: 32px;
+    /* 固定高度 */
 }
 
+/* 左侧按钮组和标题容器 */
+.title-section {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    /* 允许flex项目收缩到比内容更小 */
+}
+
+.dots {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    margin-right: 15px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transition: opacity 0.3s;
+}
+
+.dot-red {
+    background: #ff5f56;
+}
+
+.dot-yellow {
+    background: #ffbd2e;
+}
+
+.dot-green {
+    background: #27c93f;
+}
+
+/* 标题和文件菜单 */
+.title {
+    color: var(--color-menuText);
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    flex: 1;
+}
+
+.file-menu {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.menu-item {
+    padding: 5px 10px;
+    color: var(--color-menuText);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.menu-item:hover {
+    background-color: var(--color-menuOptionHover);
+}
+
+.menu-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 200px;
+    background: var(--color-menuDropdownBg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    padding: 4px;
+    margin-top: 4px;
+    display: none;
+    z-index: 1000;
+}
+
+.menu-dropdown.show {
+    display: block;
+    animation: menuFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes menuFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.menu-option {
+    padding: 8px 12px;
+    cursor: pointer;
+    color: var(--color-menuText);
+    transition: background-color 0.2s;
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
+.menu-option:hover {
+    background-color: var(--color-menuOptionHover);
+}
+
+/* 代码区域 */
 .code-frame__content {
     flex: 1;
+    display: flex;
     position: relative;
-    padding: 20px 20px 20px 15px;  /* 左侧改为15px */
+    background: var(--color-background);
+    font-family: 'Cascadia Code', monospace;
+    line-height: var(--code-line-height);
+    overflow: auto;
 }
 
 .code-frame__line-numbers {
-    position: absolute;
-    left: 15px;  /* 与左侧边距对齐 */
-    top: 20px;
-    width: 40px;
+    flex-shrink: 0;
+    width: 60px;
+    padding: 20px 0;
     text-align: right;
     color: #858585;
     user-select: none;
-    display: flex;
-    flex-direction: column;
-    line-height: var(--code-line-height);
-    font-family: 'Cascadia Code', monospace;
+    background: var(--color-background);
+    border-right: 1px solid #333;
 }
 
 .code-frame__code {
     flex: 1;
-    margin-left: 50px;
+    padding: 20px;
+    color: var(--color-menuText);
     white-space: pre;
     overflow-x: auto;
-    font-family: 'Cascadia Code', 'Source Han Sans & Saira Hybrid', monospace;
-    line-height: var(--code-line-height);
-    min-height: 360px;
-    position: relative;
 }
 
-.code-frame__code-line {
-    min-height: var(--code-line-height);
+.line-number {
+    padding-right: 15px;
+    height: var(--code-line-height);
+}
+
+.code-line {
+    height: var(--code-line-height);
     display: flex;
     align-items: center;
 }
 
-.code-frame__line-number {
-    padding-right: 15px;
-    height: var(--code-line-height);
-    color: #858585;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.links {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.link {
+    color: var(--color-menuText);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.link:hover {
+    color: #fff;
+}
+
+.error-display {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #c41e3a;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1001;
 }
