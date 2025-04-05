@@ -34,15 +34,24 @@
 
         .menu-item {
             padding: 5px 10px;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            position: relative;
+            z-index: 2;
         }
 
         .menu-item:hover {
-            background-color: var(--color-menuHover);
+            background-color: var(--color-menuOptionHover);
+            color: var(--color-headerHover);
             transition: background-color 0.3s ease;
         }
 
+        .menu-item:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .menu-dropdown {
-            display: none;
             position: absolute;
             right: 0;
             top: 100%;
@@ -52,14 +61,22 @@
             z-index: 1;
             border-radius: 8px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            padding: 4px;
+            margin-top: 4px;
+            transition: opacity 0.3s ease;
+            transform-origin: top;
+            opacity: 0;
+            transform: scaleY(0);
+            animation: none;
         }
 
         .menu-option {
             color: var(--color-menuText);
-            padding: 8px 16px;
+            padding: 8px 12px;  /* 调整内边距 */
             text-decoration: none;
             display: block;
+            border-radius: 4px;  /* 添加圆角 */
+            transition: all 0.3s ease;
         }
 
         .menu-option:hover {
@@ -70,7 +87,20 @@
 
         .menu-dropdown.show {
             display: block;
-            animation: fadeIn 0.3s ease-out;
+            opacity: 1;
+            transform: scaleY(1);
+            animation: dropDown 0.4s cubic-bezier(0.0, 1, 0.565, 1); /* sine-out 曲线 */
+        }
+
+        @keyframes dropDown {
+            0% {
+                opacity: 0;
+                transform: scaleY(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scaleY(1);
+            }
         }
 
         body {
@@ -148,6 +178,7 @@
             display: flex;
             flex-direction: column;
             line-height: var(--code-line-height);
+            font-family: 'Cascadia Code', monospace;
         }
 
         .line-number {
@@ -291,7 +322,7 @@
         }
 
         .link {
-            color: #569CD6;
+            color: var(--color-accentColor);
             text-decoration: none;
             transition: color 0.3s;
             opacity: 0;
@@ -299,7 +330,7 @@
         }
 
         .link:hover {
-            color: #3794ff;
+            color: var(--color-foreground);
         }
 
         .link:nth-child(1) {
@@ -503,9 +534,62 @@
             50% { transform: translateY(-10px); }
         }
     </style>
-    <script src="Resource/js/cpp-parser.js"></script>
+    <link rel="stylesheet" href="Resource/css/code-frame.css">
     <script src="Resource/js/themes.js"></script>
-    <script src="Resource/js/languages.js"></script>
+    <script src="Resource/js/config.js"></script>
+    <script src="Resource/js/file-manager.js"></script>
+    <script>
+        class App {
+            constructor() {
+                this.isDarkTheme = localStorage.getItem('theme') !== 'light';
+                this.fileManager = new FileManager();
+                this.themeButton = document.querySelector('.theme-switch');
+                this.init();
+            }
+
+            init() {
+                this.applyTheme(this.isDarkTheme ? 'dark' : 'light');
+                this.setupEventListeners();
+                this.fileManager.loadDirectory().then(() => {
+                    this.fileManager.loadFile(CONFIG.defaultFile);
+                });
+            }
+
+            setupEventListeners() {
+                const fileMenuBtn = document.getElementById('fileMenuBtn');
+                document.addEventListener('click', e => {
+                    if (!fileMenuBtn.contains(e.target)) {
+                        document.getElementById('fileMenuDropdown').classList.remove('show');
+                    }
+                });
+
+                fileMenuBtn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    document.getElementById('fileMenuDropdown').classList.toggle('show');
+                });
+            }
+
+            applyTheme(theme) {
+                const colors = ThemeManager.getTheme(theme);
+                Object.entries(colors).forEach(([key, value]) => {
+                    document.documentElement.style.setProperty(`--color-${key}`, value);
+                });
+                this.themeButton.textContent = theme === 'dark' ? '亮色主题' : '暗色主题';
+            }
+
+            toggleTheme() {
+                this.isDarkTheme = !this.isDarkTheme;
+                const theme = this.isDarkTheme ? 'dark' : 'light';
+                this.applyTheme(theme);
+                localStorage.setItem('theme', theme);
+            }
+        }
+
+        // 创建全局实例
+        window.addEventListener('DOMContentLoaded', () => {
+            window.app = new App();
+        });
+    </script>
 </head>
 
 <body>
@@ -513,41 +597,39 @@
     <header class="header">
         <div class="header-left">
             <div class="logo">PstErti</div>
-            <nav class="nav-links">
+            <nav class="nav-links"></nav>
                 <a href="#" class="nav-link">首页</a>
                 <a href="#" class="nav-link">博客</a>
                 <a href="#" class="nav-link">项目</a>
                 <a href="#" class="nav-link">关于</a>
             </nav>
-            <button class="theme-switch" onclick="toggleTheme()">亮色主题</button>
+            <button class="theme-switch" onclick="app.toggleTheme()">亮色主题</button>
         </div>
     </header>
 
     <div class="editor">
-        <div class="title-bar">
-            <div class="dots">
-                <div class="dot dot-red" onclick="window.close()"></div>
-                <div class="dot dot-yellow"></div>
-                <div class="dot dot-green"></div>
-            </div>
-            <div class="title">AboutPstErti.cpp</div>
-            <div class="file-menu">
-                <span class="menu-item" id="fileMenuBtn">文件</span>
-                <div class="menu-dropdown" id="fileMenuDropdown">
-                    <div class="menu-option" onclick="loadFileContent('Resource/Article/MainPage/AboutPstErti.cpp')">
-                        AboutPstErti.cpp</div>
-                    <div class="menu-option" onclick="loadFileContent('Resource/Article/MainPage/test.txt')">
-                        test.txt
+        <div class="code-frame">
+            <div class="code-frame__title-bar">
+                <div class="dots">
+                    <div class="dot dot-red" onclick="window.close()"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                </div>
+                <div class="title">AboutPstErti.cpp</div>
+                <div class="file-menu">
+                    <span class="menu-item" id="fileMenuBtn">文件</span>
+                    <div class="menu-dropdown" id="fileMenuDropdown">
+                        <!-- 内容会由 FileManager 动态生成 -->
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="code-area">
-            <div class="line-numbers" id="lineNumbers">
-                <!-- Line numbers will be generated by JavaScript -->
-            </div>
-            <div class="code-content">
-                <!-- Content will be generated by JavaScript -->
+            <div class="code-frame__content">
+                <div class="code-frame__line-numbers" id="lineNumbers">
+                    <!-- Line numbers will be generated by JavaScript -->
+                </div>
+                <div class="code-frame__code" id="codeContent">
+                    <!-- Content will be generated by JavaScript -->
+                </div>
             </div>
         </div>
     </div>
@@ -559,115 +641,8 @@
     </div>
 
     <footer>
-        © 2024 PstErti. All rights reserved.
+        © 2025 PstErti. All rights reserved.
     </footer>
-    <script>
-        function getFileExtension(filename) {
-            return filename.split('.').pop().toLowerCase();
-        }
-
-        function loadFileContent(filename) {
-            const fileMenuDropdown = document.getElementById('fileMenuDropdown');
-            const codeContent = document.querySelector('.code-content');
-            const lineNumbers = document.getElementById('lineNumbers');
-
-            fileMenuDropdown.classList.remove('show');
-            fetch(filename)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(response.status === 404 ? 
-                            '文件未找到: ' + filename : 
-                            '网络响应错误: ' + response.status);
-                    }
-                    return response.text();
-                })
-                .then(data => {
-                    // 清空原有内容
-                    codeContent.innerHTML = '';
-                    lineNumbers.innerHTML = '';
-                    
-                    const lines = data.split('\n');
-                    const lineHeight = parseInt(getComputedStyle(document.documentElement)
-                        .getPropertyValue('--code-line-height'));
-                    const codeFragment = document.createDocumentFragment();
-                    
-                    // 注释掉语言处理器相关代码
-                    // const language = Language.fromExtension(getFileExtension(filename));
-                    
-                    lines.forEach((line, index) => {
-                        // 添加行号
-                        const lineNumber = document.createElement('div');
-                        lineNumber.className = 'line-number';
-                        lineNumber.textContent = index + 1;
-                        lineNumbers.appendChild(lineNumber);
-
-                        // 直接显示原始代码，不进行高亮
-                        const lineDiv = document.createElement('div');
-                        lineDiv.className = 'code-line';
-                        lineDiv.textContent = line || ' ';  // 使用textContent而不是innerHTML
-                        codeFragment.appendChild(lineDiv);
-                    });
-
-                    codeContent.appendChild(codeFragment);
-                    document.querySelector('.title').textContent = filename.split('/').pop();
-                    const codeArea = document.querySelector('.code-area');
-                    codeArea.style.minHeight = (lines.length * lineHeight + 40) + 'px';
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    codeContent.innerHTML = error.message;
-                    lineNumbers.innerHTML = '';
-                    document.querySelector('.title').textContent = '加载失败';
-                    document.querySelector('.code-area').style.minHeight = '100px';
-                });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // 应用暗色主题
-            const colors = getThemeColors('dark');
-            for (const [key, value] of Object.entries(colors)) {
-                document.documentElement.style.setProperty(`--color-${key}`, value);
-            }
-            
-            // 初始加载AboutPstErti.cpp文件
-            loadFileContent('Resource/Article/MainPage/AboutPstErti.cpp');
-
-            // 文件菜单点击事件
-            const fileMenuBtn = document.getElementById('fileMenuBtn');
-            const fileMenuDropdown = document.getElementById('fileMenuDropdown');
-
-            fileMenuBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                fileMenuDropdown.classList.toggle('show');
-            });
-
-            // 点击页面其他区域关闭菜单
-            document.addEventListener('click', function(e) {
-                if (!fileMenuBtn.contains(e.target) && !fileMenuDropdown.contains(e.target)) {
-                    fileMenuDropdown.classList.remove('show');
-                }
-            });
-
-            // 阻止菜单内部点击事件冒泡
-            fileMenuDropdown.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-
-
-        });
-
-        // 添加主题切换功能
-        let isDarkTheme = true;
-        function toggleTheme() {
-            isDarkTheme = !isDarkTheme;
-            const colors = getThemeColors(isDarkTheme ? 'dark' : 'light');
-            for (const [key, value] of Object.entries(colors)) {
-                document.documentElement.style.setProperty(`--color-${key}`, value);
-            }
-            document.querySelector('.theme-switch').textContent = 
-                isDarkTheme ? '亮色主题' : '暗色主题';
-        }
-    </script>
 </body>
 
 </html>

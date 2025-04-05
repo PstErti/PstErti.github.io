@@ -1,0 +1,59 @@
+.code-frame {
+    background-color: var(--color-background);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.code-frame__title-bar {
+    background: var(--color-titleBar);
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+}
+
+.code-frame__content {
+    flex: 1;
+    position: relative;
+    padding: 20px 20px 20px 15px;  /* 左侧改为15px */
+}
+
+.code-frame__line-numbers {
+    position: absolute;
+    left: 15px;  /* 与左侧边距对齐 */
+    top: 20px;
+    width: 40px;
+    text-align: right;
+    color: #858585;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    line-height: var(--code-line-height);
+    font-family: 'Cascadia Code', monospace;
+}
+
+.code-frame__code {
+    flex: 1;
+    margin-left: 50px;
+    white-space: pre;
+    overflow-x: auto;
+    font-family: 'Cascadia Code', 'Source Han Sans & Saira Hybrid', monospace;
+    line-height: var(--code-line-height);
+    min-height: 360px;
+    position: relative;
+}
+
+.code-frame__code-line {
+    min-height: var(--code-line-height);
+    display: flex;
+    align-items: center;
+}
+
+.code-frame__line-number {
+    padding-right: 15px;
+    height: var(--code-line-height);
+    color: #858585;
+}
