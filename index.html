@@ -8,16 +8,27 @@
     <style>
         @font-face {
             font-family: 'Cascadia Code';
-            src: url('Resource/Font/CascadiaCode.TTF') format('truetype');
+            src: local("Cascadia Code"),
+                local("Cascadia-Code"),
+                url("Resource/font/Cascadia Code/WOFF2.woff2") format("woff2"),
+                url("Resource/font/Cascadia Code/WOFF.woff") format("woff"),
+                url("Resource/font/Cascadia Code/EOT.eot") format("embedded-opentype"),
+                url("Resource/font/Cascadia Code/TrueType.ttf") format("truetype");
         }
 
         @font-face {
             font-family: 'Source Han Sans & Saira Hybrid';
-            src: url('Resource/Font/Source Han Sans & Saira Hybrid.TTF') format('truetype');
+            src: local("Source Han Sans & Saira Hybrid"),
+                local("Source-Han-Sans-&-Saira-Hybrid"),
+                url("Resource/font/Source Han Sans & Saira Hybrid/WOFF2.woff2") format("woff2"),
+                url("Resource/font/Source Han Sans & Saira Hybrid/WOFF.woff") format("woff"),
+                url("Resource/font/Source Han Sans & Saira Hybrid/EOT.eot") format("embedded-opentype"),
+                url("Resource/font/Source Han Sans & Saira Hybrid/TrueType.ttf") format("truetype");
         }
 
         :root {
-            --code-line-height: 24px;  /* 默认行高 */
+            --code-line-height: 24px;
+            /* 默认行高 */
         }
 
         .file-menu {
@@ -72,10 +83,12 @@
 
         .menu-option {
             color: var(--color-menuText);
-            padding: 8px 12px;  /* 调整内边距 */
+            padding: 8px 12px;
+            /* 调整内边距 */
             text-decoration: none;
             display: block;
-            border-radius: 4px;  /* 添加圆角 */
+            border-radius: 4px;
+            /* 添加圆角 */
             transition: all 0.3s ease;
         }
 
@@ -89,7 +102,8 @@
             display: block;
             opacity: 1;
             transform: scaleY(1);
-            animation: dropDown 0.4s cubic-bezier(0.0, 1, 0.565, 1); /* sine-out 曲线 */
+            animation: dropDown 0.4s cubic-bezier(0.0, 1, 0.565, 1);
+            /* sine-out 曲线 */
         }
 
         @keyframes dropDown {
@@ -97,6 +111,7 @@
                 opacity: 0;
                 transform: scaleY(0);
             }
+
             100% {
                 opacity: 1;
                 transform: scaleY(1);
@@ -115,8 +130,10 @@
 
         .editor {
             max-width: 900px;
-            width: calc(100% - 60px);  /* 两边各留30px边距 */
-            margin: 120px auto 50px;   /* 上边距为页眉空间 */
+            width: calc(100% - 60px);
+            /* 两边各留30px边距 */
+            margin: 120px auto 50px;
+            /* 上边距为页眉空间 */
             border-radius: 5px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -203,56 +220,70 @@
         }
 
         .comment {
-            color: var(--color-comment);  /* 绿色 */
+            color: var(--color-comment);
+            /* 绿色 */
         }
 
         .keyword {
-            color: var(--color-keyword);  /* 蓝色 */
+            color: var(--color-keyword);
+            /* 蓝色 */
         }
 
         .control {
-            color: var(--color-control);  /* 粉紫色 */
+            color: var(--color-control);
+            /* 粉紫色 */
         }
 
         .namespace {
-            color: var(--color-namespace);  /* 与type相同 */
+            color: var(--color-namespace);
+            /* 与type相同 */
         }
 
         .string {
-            color: var(--color-string);  /* 橙色 */
+            color: var(--color-string);
+            /* 橙色 */
         }
 
         .function {
-            color: var(--color-function);  /* 浅黄色 */
+            color: var(--color-function);
+            /* 浅黄色 */
         }
 
         .number {
-            color: var(--color-number);  /* 浅绿色 */
+            color: var(--color-number);
+            /* 浅绿色 */
         }
 
         .operator {
-            color: var(--color-operator);  /* 白色 */
+            color: var(--color-operator);
+            /* 白色 */
         }
 
         .preprocessor {
-            color: var(--color-preprocessor);  /* 蓝色，与关键字相同 */
+            color: var(--color-preprocessor);
+            /* 蓝色，与关键字相同 */
         }
 
         .type {
-            color: var(--color-type);  /* 青色 */
+            color: var(--color-type);
+            /* 青色 */
         }
 
         .whitespace {
-            color: inherit;  /* 继承默认文本颜色 */
+            color: inherit;
+            /* 继承默认文本颜色 */
         }
 
         .function-definition {
-            color: #DCDCAA;  /* 与function相同的颜色 */
-            font-weight: bold;  /* 加粗显示 */
+            color: #DCDCAA;
+            /* 与function相同的颜色 */
+            font-weight: bold;
+            /* 加粗显示 */
         }
 
         .variable-definition {
-            color: #9CDCFE;  /* 浅蓝色 */
+            color: #9CDCFE;
+            /* 浅蓝色 */
         }
 
         .user-class {
@@ -349,7 +380,8 @@
         .header {
             background: var(--color-headerBg);
             backdrop-filter: blur(10px);
-            padding: 15px 50px;  /* 增加左右padding */
+            padding: 15px 50px;
+            /* 增加左右padding */
             position: fixed;
             width: 100%;
             top: 0;
@@ -366,15 +398,16 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 40px;  /* 增加间距 */
+            gap: 40px;
+            /* 增加间距 */
         }
 
         .logo {
             font-size: 24px;
             font-weight: bold;
-            background: linear-gradient(45deg, 
-                var(--color-accentColor), 
-                var(--color-accentColor2));
+            background: linear-gradient(45deg,
+                    var(--color-accentColor),
+                    var(--color-accentColor2));
             background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: gradientFlow 8s linear infinite;
@@ -419,7 +452,8 @@
             border-radius: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-left: 20px;  /* 增加左边距，与导航链接分开 */
+            margin-left: 20px;
+            /* 增加左边距，与导航链接分开 */
         }
 
         .theme-switch:hover {
@@ -429,14 +463,17 @@
 
         /* 修改editor样式以适应新布局 */
         .editor {
-            margin-top: 120px;  /* 为页眉留出空间 */
+            margin-top: 120px;
+            /* 为页眉留出空间 */
         }
 
         /* 响应式布局调整 */
         @media screen and (max-width: 768px) {
+
             /* 平板设备 */
             .editor {
-                width: calc(100% - 40px);  /* 较小设备减小边距 */
+                width: calc(100% - 40px);
+                /* 较小设备减小边距 */
                 margin: 100px auto 30px;
             }
 
@@ -460,9 +497,11 @@
         }
 
         @media screen and (max-width: 480px) {
+
             /* 手机设备 */
             .editor {
-                width: calc(100% - 30px);  /* 手机端最小边距 */
+                width: calc(100% - 30px);
+                /* 手机端最小边距 */
                 margin: 80px auto 20px;
             }
 
@@ -503,7 +542,8 @@
         /* 处理极小屏幕 */
         @media screen and (max-width: 360px) {
             .editor {
-                width: calc(100% - 20px);  /* 极小屏幕最小边距 */
+                width: calc(100% - 20px);
+                /* 极小屏幕最小边距 */
                 margin: 70px auto 15px;
             }
 
@@ -519,19 +559,39 @@
 
         /* 新增动画 */
         @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
         }
 
         @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
     </style>
     <link rel="stylesheet" href="Resource/css/code-frame.css">
@@ -574,7 +634,7 @@
                 Object.entries(colors).forEach(([key, value]) => {
                     document.documentElement.style.setProperty(`--color-${key}`, value);
                 });
-                this.themeButton.textContent = theme === 'dark' ? '亮色主题' : '暗色主题';
+                this.themeButton.textContent = theme === 'dark' ? '浅色主题' : '深色主题';
             }
 
             toggleTheme() {
@@ -597,13 +657,13 @@
     <header class="header">
         <div class="header-left">
             <div class="logo">PstErti</div>
-            <nav class="nav-links"></nav>
+            <nav class="nav-links">
                 <a href="#" class="nav-link">首页</a>
                 <a href="#" class="nav-link">博客</a>
                 <a href="#" class="nav-link">项目</a>
                 <a href="#" class="nav-link">关于</a>
             </nav>
-            <button class="theme-switch" onclick="app.toggleTheme()">亮色主题</button>
+            <button class="theme-switch" onclick="app.toggleTheme()">浅色主题</button>
         </div>
     </header>
 
