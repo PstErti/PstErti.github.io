@@ -18,7 +18,7 @@ class ProjectPage {
         this.initContent();
 
         this.header.inject('#header');
-        this.header.onThemeSwitch = () => this.toggleTheme();
+        this.header.onThemeSwitch((theme) => this.applyTheme(theme));
 
         // 设置初始主题图标
         const currentTheme = localStorage.getItem('theme') || 'dark';
@@ -38,20 +38,8 @@ class ProjectPage {
         Object.entries(colors).forEach(([key, value]) => {
             document.documentElement.style.setProperty(`--color-${key}`, value);
         });
-
-        // 更新页脚颜色
-        const footerElement = document.querySelector('.footer-container');
-        if (footerElement) {
-            footerElement.style.setProperty('color', colors.menuText);
-        }
     }
 
-    toggleTheme() {
-        const currentTheme = localStorage.getItem('theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        localStorage.setItem('theme', newTheme);
-        this.applyTheme(newTheme);
-    }
 }
 
 new ProjectPage();

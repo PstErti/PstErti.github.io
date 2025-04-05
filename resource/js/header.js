@@ -71,9 +71,10 @@ class Header {
             </div>
         `;
 
+        // 修改事件监听的绑定方式
         this.themeSwitch = this.container.querySelector('.theme-switch');
         this.themeSwitch.addEventListener('click', () => {
-            if (this.onThemeSwitch) this.onThemeSwitch();
+            this.toggleTheme();  // 直接调用 toggleTheme
         });
     }
 
@@ -106,5 +107,24 @@ class Header {
         // 确保注入到 body 的开头
         document.body.insertBefore(this.container, document.body.firstChild);
         return true;
+    }
+
+    initThemeSwitch() {
+        const switchBtn = document.querySelector('.theme-switch');
+        if (switchBtn) {
+            switchBtn.addEventListener('click', () => this.toggleTheme());
+        }
+    }
+
+    toggleTheme() {
+        const prefersDark = localStorage.getItem('theme') === 'dark';
+        const newTheme = prefersDark ? 'light' : 'dark';
+        localStorage.setItem('theme', newTheme);
+        this.setThemeIcon(newTheme === 'dark');
+
+        // 确保回调存在时才调用
+        if (typeof this.onThemeSwitch === 'function') {
+            this.onThemeSwitch(newTheme);
+        }
     }
 }

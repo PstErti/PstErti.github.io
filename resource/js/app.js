@@ -41,7 +41,7 @@ class App {
 
         this.header = new Header(headerConfig);
         this.header.inject('#header');  // 使用 inject 替换 mount
-        this.header.onThemeSwitch = () => this.toggleTheme();
+        this.header.onThemeSwitch = (theme) => this.applyTheme(theme);
     }
 
     setupEventListeners() {
@@ -69,14 +69,6 @@ class App {
         Object.entries(colors).forEach(([key, value]) => {
             document.documentElement.style.setProperty(`--color-${key}`, value);
         });
-    }
-
-    toggleTheme() {
-        this.isDarkTheme = !this.isDarkTheme;
-        const theme = this.isDarkTheme ? 'dark' : 'light';
-        this.applyTheme(theme);
-        localStorage.setItem('theme', theme);
-        this.header.setThemeIcon(this.isDarkTheme);
     }
 }
 

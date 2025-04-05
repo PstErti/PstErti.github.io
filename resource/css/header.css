@@ -157,6 +157,12 @@
     top: -3px;        /* 调整偏移 */
     left: -3px;     /* 统一起始位置 */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+}
+
+.switch-icon.sun,
+.switch-icon.moon {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .switch-icon.sun {
@@ -249,6 +255,8 @@
         height: 26px;
         top: -3px;
         left: -3px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform, opacity;
     }
 
     .switch-icon.sun,
