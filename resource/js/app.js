@@ -5,7 +5,6 @@ class App {
             prefersDark :
             localStorage.getItem('theme') !== 'light';
 
-        this.fileManager = new FileManager();
         this.themeButton = document.querySelector('.theme-switch');
         this.codeFrame = new CodeFrame({
             marginTop: '50px'  // 可以根据需要调整距离
@@ -47,15 +46,21 @@ class App {
 
     setupEventListeners() {
         const fileMenuBtn = document.getElementById('fileMenuBtn');
+        if (!fileMenuBtn) return;  // 如果按钮不存在则返回
+
         document.addEventListener('click', e => {
-            if (!fileMenuBtn.contains(e.target)) {
-                document.getElementById('fileMenuDropdown').classList.remove('show');
+            const dropdown = document.getElementById('fileMenuDropdown');
+            if (dropdown && !fileMenuBtn.contains(e.target)) {
+                dropdown.classList.remove('show');
             }
         });
 
         fileMenuBtn.addEventListener('click', e => {
             e.stopPropagation();
-            document.getElementById('fileMenuDropdown').classList.toggle('show');
+            const dropdown = document.getElementById('fileMenuDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
         });
     }
 

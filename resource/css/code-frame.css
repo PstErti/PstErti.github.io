@@ -12,7 +12,7 @@
     min-height: 100vh;
     padding-top: 60px;
     /* 减小顶部内边距，为页眉留出空间 */
-    display: flex;
+    display: flex; 
     flex-direction: column;
     align-items: center;
     background: var(--color-background);
@@ -23,7 +23,7 @@
 .code-frame {
     width: calc(100% - 60px);
     max-width: 900px;
-    border-radius: 5px;
+    border-radius: 5px; 
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     background: var(--color-background);
@@ -36,18 +36,86 @@
 /* 响应式布局 */
 @media screen and (max-width: 768px) {
     .code-frame {
-        width: calc(100% - 40px);
+        width: calc(100% - 20px);
+        margin: 10px;
     }
 
     .main-container {
-        padding: 80px 0 30px;
+        padding: 60px 0 20px;
+    }
+
+    .code-frame__title-bar {
+        padding: 6px 10px;
+        height: 28px;
+    }
+
+    .dots {
+        gap: 6px;
+        margin-right: 10px;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    .title {
+        font-size: 12px;
+        max-width: 150px;
+    }
+
+    .menu-item {
+        padding: 4px 8px;
+        font-size: 14px;  /* 调大字体 */
+    }
+
+    .menu-dropdown {
+        min-width: 180px;  /* 调整下拉框宽度 */
+    }
+
+    .menu-option {
+        padding: 8px 12px;
+        font-size: 13px;   /* 调整下拉选项字体 */
+    }
+
+    .code-frame__line-numbers {
+        width: 40px;
+        padding: 15px 0;
+    }
+
+    .code-frame__code {
+        padding: 15px;
+        font-size: 14px;
     }
 }
 
 @media screen and (max-width: 480px) {
     .code-frame {
         width: calc(100% - 30px);
-        margin: 80px auto 20px;
+        margin: 5px;
+    }
+
+    .menu-dropdown {
+        right: 0;
+        min-width: 140px;  /* 更小屏幕下减小宽度 */
+        max-width: 90vw;   /* 防止超出屏幕 */
+    }
+
+    .menu-item {
+        font-size: 13px;  /* 较小屏幕下稍微减小字体 */
+    }
+
+    .menu-option {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .code-frame__content {
+        font-size: 13px;
+    }
+
+    .line-number {
+        padding-right: 10px;
     }
 }
 
@@ -55,12 +123,48 @@
     .code-frame {
         max-width: 1200px;
     }
+
+    .code-frame__content {
+        font-size: 16px;
+    }
+
+    .title {
+        font-size: 14px;
+        max-width: 300px;
+    }
 }
 
 @media screen and (max-width: 360px) {
     .code-frame {
         width: calc(100% - 20px);
         margin: 70px auto 15px;
+    }
+
+    .dots {
+        display: none;
+    }
+
+    .title {
+        margin-left: 0;
+    }
+
+    .code-frame__line-numbers {
+        width: 32px;
+    }
+
+    .code-frame__code {
+        padding: 10px;
+    }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) {
+    .menu-item, .menu-option {
+        padding: 8px 12px; /* 增大点击区域 */
+    }
+
+    .dot {
+        opacity: 1; /* 始终显示圆点 */
     }
 }
 
@@ -112,11 +216,11 @@
 /* 标题和文件菜单 */
 .title {
     color: var(--color-menuText);
-    font-size: 14px;
+    font-size: 16px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin: 0;
+    margin-left: 10px;
     flex: 1;
 }
 

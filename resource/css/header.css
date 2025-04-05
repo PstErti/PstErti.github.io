@@ -57,6 +57,13 @@
     transform: translateY(3px);
 }
 
+.header__logo img {
+    height: 40px;
+    width: auto;
+    filter: var(--color-logoTint);
+    transition: filter 0.3s ease;
+}
+
 .logo img {
     height: 100%;
     width: auto;
@@ -100,26 +107,81 @@
     width: 100%;
 }
 
+.nav-link.active {
+    color: var(--color-headerHover);
+    position: relative;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-headerHover);
+}
+
 .theme-switch {
+    position: relative;
+    width: 46px;      /* 减小基础宽度 */
+    height: 22px;     /* 减小基础高度 */
+    margin-right: 30px;
+    cursor: pointer;
     background: none;
     border: none;
-    color: var(--color-headerText);
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
     padding: 0;
-    transition: transform 0.3s;
-    margin-right: 15px;
+    overflow: visible; /* 允许内容溢出 */
+}
+
+.switch-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-menuText);
+    border-radius: 11px;
+    opacity: 0.15;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-switch:hover .switch-track {
+    opacity: 0.25;
+}
+
+.switch-icon {
+    position: absolute;
+    width: 28px;      /* 减小图标尺寸 */
+    height: 28px;
+    top: -3px;        /* 调整偏移 */
+    left: -3px;     /* 统一起始位置 */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.switch-icon.sun {
+    opacity: 1;
+    transform: translateX(0);  /* 明确初始位置 */
+}
+
+.switch-icon.moon {
+    opacity: 0;
+    transform: translateX(0);  /* 明确初始位置 */
+}
+
+/* 暗色主题状态 */
+.switch-icon.sun.dark {
+    opacity: 0;
+    transform: translateX(24px);  /* 调整移动距离 */
+}
+
+.switch-icon.moon.dark {
+    opacity: 1;
+    transform: translateX(24px);  /* 添加移动距离 */
 }
 
 .theme-switch:hover {
-    transform: scale(1.1);
-}
-
-.theme-switch svg {
-    width: 100%;
-    height: 100%;
-    fill: currentColor;
+    transform: scale(1.05);
 }
 
 .header__title {
@@ -129,6 +191,7 @@
     margin: 0;
     letter-spacing: 0.5px;
     transform: translateY(-3px);
+    transition: color 0.3s ease;
 }
 
 .divider {
@@ -136,55 +199,89 @@
     height: 20px;
     background-color: var(--color-menuText);
     opacity: 0.3;
+    transition: background-color 0.3s ease;
 }
 
 @media screen and (max-width: 768px) {
     .header {
-        padding: 12px 20px;
+        padding: 12px 30px;  /* 保持较大的水平内边距 */
+    }
+
+    .header__title,
+    .divider {
+        display: none;
+    }
+
+    .header__left {
+        gap: 20px;
     }
 
     .nav-links {
         gap: 20px;
     }
 
-    .header-left {
-        gap: 20px;
-    }
-
-    .theme-switch {
-        margin-left: 10px;
-        padding: 3px 10px;
+    .nav-link {
         font-size: 14px;
     }
 }
 
 @media screen and (max-width: 480px) {
     .header {
-        padding: 10px 15px;
+        padding: 10px 30px;  /* 保持水平内边距不变 */
     }
 
-    .logo {
-        font-size: 20px;
-    }
-
-    .nav-links {
+    .header__left {
         gap: 15px;
-        font-size: 14px;
+    }
+
+    .nav-link {
+        font-size: 13px;
     }
 
     .theme-switch {
-        font-size: 12px;
-        padding: 2px 8px;
+        width: 42px;  /* 移动端更小 */
+        height: 20px;
+        margin-right: 30px;
+    }
+
+    .switch-icon {
+        width: 26px;
+        height: 26px;
+        top: -3px;
+        left: -3px;
+    }
+
+    .switch-icon.sun,
+    .switch-icon.moon {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .switch-icon.moon {
+        opacity: 0;
+        transform: translateX(0);
+    }
+
+    .switch-icon.sun.dark {
+        opacity: 0;
+        transform: translateX(22px);  /* 调整移动端移动距离 */
+    }
+
+    .switch-icon.moon.dark {
+        opacity: 1;
+        transform: translateX(22px);  /* 调整移动端移动距离 */
     }
 }
 
 @media screen and (max-width: 360px) {
-    .header-left {
-        gap: 10px;
+    .header {
+        padding: 8px 30px;  /* 保持水平内边距不变 */
     }
 
-    .nav-links {
-        gap: 10px;
+    .header__left {
+        gap: 12px;
+    }
+
+    .nav-link {
         font-size: 12px;
     }
 }

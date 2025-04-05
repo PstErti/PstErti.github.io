@@ -39,25 +39,36 @@ class Header {
         const isSubPage = window.location.pathname.includes('/pages/');
         const basePath = isSubPage ? '../' : '';
 
+        // 获取当前页面路径
+        const currentPath = window.location.pathname;
+        const navLinks = {
+            'index.html': '主页',
+            'pages/blog.html': '博客',
+            'pages/projects.html': '项目',
+            'pages/about.html': '关于'
+        };
+
         this.container.innerHTML = `
             <div class="header__left" style="display: flex; align-items: center; gap: 30px;">
                 <div class="header__logo">
                     <img src="${basePath}resource/texture/logo-PstErti-500x188.png" alt="PstErti" style="height: 40px; width: auto; filter: var(--color-logoTint);">
                 </div>
-                <div class="divider"></div>
-                <div class="header__title">${config.title || ''}</div>
-                <div class="divider"></div>
+                <div class="divider header-divider"></div>
+                <div class="header__title header-title">${config.title || ''}</div>
+                <div class="divider header-divider"></div>
                 <nav class="header__nav" style="display: flex; gap: 15px;">
-                    <a href="${basePath}index.html" class="nav-link">主页</a>
-                    <a href="${basePath}pages/blog.html" class="nav-link">博客</a>
-                    <a href="${basePath}pages/projects.html" class="nav-link">项目</a>
-                    <a href="${basePath}pages/about.html" class="nav-link">关于</a>
+                    ${Object.entries(navLinks).map(([path, text]) => {
+                        const isActive = currentPath.endsWith(path) || 
+                                       (path === 'index.html' && (currentPath === '/' || currentPath.endsWith('/')));
+                        return `<a href="${basePath}${path}" class="nav-link${isActive ? ' active' : ''}">${text}</a>`;
+                    }).join('')}
                 </nav>
             </div>
-            <button class="theme-switch" title="切换主题" style="width: 20px; height: 20px; padding: 0; margin-left: auto; margin-right: 30px;">
-                <img class="sun" src="${basePath}resource/texture/sun.svg" alt="light theme" style="width: 100%; height: 100%;">
-                <img class="moon" src="${basePath}resource/texture/moon.svg" alt="dark theme" style="width: 100%; height: 100%; display:none;">
-            </button>
+            <div class="theme-switch" title="切换主题">
+                <div class="switch-track"></div>
+                <img class="switch-icon sun" src="${basePath}resource/texture/sun.svg" alt="light theme">
+                <img class="switch-icon moon" src="${basePath}resource/texture/moon.svg" alt="dark theme">
+            </div>
         `;
 
         this.themeSwitch = this.container.querySelector('.theme-switch');
@@ -71,11 +82,14 @@ class Header {
     }
 
     setThemeIcon(isDark) {
-        const sunIcon = this.container.querySelector('.sun');
-        const moonIcon = this.container.querySelector('.moon');
-        // 反转显示逻辑：暗色主题显示太阳，浅色主题显示月亮
-        sunIcon.style.display = isDark ? 'block' : 'none';
-        moonIcon.style.display = isDark ? 'none' : 'block';
+        const switchIcons = this.container.querySelectorAll('.switch-icon');
+        switchIcons.forEach(icon => {
+            if (isDark) {
+                icon.classList.add('dark');
+            } else {
+                icon.classList.remove('dark');
+            }
+        });
     }
 
     onThemeSwitch(callback) {

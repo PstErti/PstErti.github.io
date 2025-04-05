@@ -4,8 +4,28 @@ class CodeFrame {
             marginTop: '30px'
         };
         this.config = { ...defaultConfig, ...config };
+    }
 
+    initialize() {
+        if (!this.setupFrame()) {
+            console.error('框架初始化失败');
+            return;
+        }
+
+        if (window.fileManager) {
+            this.loadDirectory('MainPage');
+        } else {
+            this.showError('FileManager 未初始化');
+        }
+    }
+
+    setupFrame() {
         this.frame = document.querySelector('.code-frame');
+        if (!this.frame) {
+            this.showError('找不到 code-frame 元素');
+            return false;
+        }
+
         this.frame.style.marginTop = this.config.marginTop;
 
         this.frame.innerHTML = `
@@ -16,7 +36,7 @@ class CodeFrame {
                         <div class="dot dot-yellow"></div>
                         <div class="dot dot-green"></div>
                     </div>
-                    <div class="title">AboutPstErti.cpp</div>
+                    <div class="title active">AboutPstErti.cpp</div>
                 </div>
                 <div class="file-menu">
                     <span class="menu-item" id="fileMenuBtn">文件</span>
@@ -30,38 +50,112 @@ class CodeFrame {
             </div>
         `;
 
-        // 初始化DOM引用
-        this.titleBar = this.frame.querySelector('.code-frame__title-bar .title');
-        this.lineNumbers = this.frame.querySelector('#lineNumbers');
-        this.codeContent = this.frame.querySelector('#codeContent');
-        this.fileMenu = this.frame.querySelector('#fileMenuDropdown');
-        this.fileMenuBtn = this.frame.querySelector('#fileMenuBtn');
-        this.errorDisplay = this.frame.querySelector('.error-display');
+        this.initMenuHandlers();
+        return true;
+    }
 
-        // 确保所有DOM引用都存在
-        if (!this.fileMenu || !this.fileMenuBtn) {
+    initMenuHandlers() {
+        this.menuVisible = false;
+        // 确保在setupFrame之后获取元素
+        const menu = this.frame.querySelector('#fileMenuDropdown');
+        const menuBtn = this.frame.querySelector('#fileMenuBtn');
+
+        if (!menu || !menuBtn) {
             console.error('菜单元素未找到');
             return;
         }
 
-        this.menuVisible = false; // 添加状态标记
+        // 设置为类属性
+        this.fileMenu = menu;
+        this.fileMenuBtn = menuBtn;
 
-        // 文件菜单事件绑定
         this.fileMenuBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('菜单按钮点击，当前状态:', this.menuVisible);
             this.toggleMenu();
         });
 
-        // 点击外部关闭菜单
         document.addEventListener('click', (e) => {
             if (this.menuVisible && !e.target.closest('.file-menu')) {
                 this.hideMenu();
             }
         });
+    }
 
-        // 菜单项点击事件直接在updateFileMenu中处理
+    async loadDirectory(path) {
+        try {
+            if (!this.frame || !this.fileMenu) {
+                throw new Error('框架未正确初始化');
+            }
+
+            const files = await window.fileManager.loadDirectory(path);
+            if (!Array.isArray(files)) {
+                throw new Error('无效的文件列表格式');
+            }
+            this.updateFileMenu(files);
+            
+            // 如果有文件，自动加载第一个
+            if (files.length > 0) {
+                await this.displayFile(`${CONFIG.basePath}/${files[0].path}`);
+            }
+        } catch (error) {
+            const errorMessage = error.message || '未知错误';
+            console.error('目录加载失败:', errorMessage);
+            this.showError(`目录加载失败: ${errorMessage}`);
+        }
+    }
+
+    updateFileMenu(files) {
+        if (!Array.isArray(files) || files.length === 0) {
+            this.fileMenu.innerHTML = '<div class="menu-option">无可用文件</div>';
+            return;
+        }
+
+        const menuContent = files.map(file => `
+            <div class="menu-option" data-file="${file.path}">${file.name}</div>
+        `).join('');
+
+        this.fileMenu.innerHTML = menuContent;
+
+        this.fileMenu.querySelectorAll('.menu-option').forEach(option => {
+            option.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const filePath = option.dataset.file;
+                await this.displayFile(filePath);
+                this.hideMenu();
+            });
+        });
+
+        this.fileMenu.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    async displayFile(filePath) {
+        try {
+            const relativePath = filePath.replace(`${CONFIG.basePath}/`, '');
+            const [{ content, title }, lineCount] = await Promise.all([
+                window.fileManager.loadContent(relativePath),
+                window.fileManager.getLineCount(relativePath)
+            ]);
+            
+            const titleBar = this.frame.querySelector('.title');
+            const codeContent = this.frame.querySelector('#codeContent');
+            const lineNumbers = this.frame.querySelector('#lineNumbers');
+            
+            titleBar.textContent = title;
+            titleBar.setAttribute('title', title);
+            codeContent.innerHTML = content;
+            
+            // 使用getLineCount的返回值
+            lineNumbers.innerHTML = Array.from(
+                { length: lineCount },
+                (_, i) => `<div class="line-number">${i + 1}</div>`
+            ).join('');
+            
+            this.showError('');
+        } catch (error) {
+            this.showError(`文件加载失败: ${error.message}`);
+        }
     }
 
     toggleMenu() {
@@ -90,97 +184,23 @@ class CodeFrame {
         });
     }
 
-    async loadDirectory(path) {
-        console.group('加载目录');
-        console.log('请求路径:', `resource/article/${path}/directory.json`);
-
-        try {
-            const response = await fetch(`resource/article/${path}/directory.json`);
-            if (!response.ok) {
-                console.error('HTTP错误:', response.status, response.statusText);
-                throw new Error(`加载失败 (${response.status})`);
-            }
-
-            const data = await response.json();
-            console.log('接收到的数据:', data);
-
-            if (!data.files || !Array.isArray(data.files)) {
-                console.error('无效的数据格式:', data);
-                throw new Error('目录格式无效');
-            }
-
-            console.log('文件列表:', data.files);
-            this.updateFileMenu(data.files);
-
-            if (data.files.length > 0) {
-                await this.loadFile(data.files[0].path);
-            }
-        } catch (error) {
-            console.error('加载失败:', error);
-            this.showError(`目录加载失败: ${error.message}`);
-        } finally {
-            console.groupEnd();
-        }
-    }
-
-    updateFileMenu(files) {
-        console.log('更新文件菜单:', files);
-        const menuContent = files.map(file => `
-            <div class="menu-option" data-file="${file.path}">${file.name}</div>
-        `).join('');
-
-        this.fileMenu.innerHTML = menuContent;
-        console.log('更新后的菜单HTML:', this.fileMenu.innerHTML);
-
-        this.fileMenu.querySelectorAll('.menu-option').forEach(option => {
-            option.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const filePath = option.dataset.file;
-                this.loadFile(filePath);
-                this.menuVisible = false; // 更新菜单状态
-                this.hideMenu();
-            });
-        });
-
-        // 给文件菜单添加点击事件阻止冒泡
-        this.fileMenu.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-    }
-
-    async loadFile(filePath) {
-        try {
-            const response = await fetch(`resource/article/${filePath}`);
-            if (!response.ok) throw new Error(`加载失败 (${response.status})`);
-
-            const content = await response.text();
-            this.displayFile({
-                displayTitle: filePath.split('/').pop() || 'Untitled',
-                content
-            });
-            this.showError('');
-        } catch (error) {
-            this.showError(`文件加载失败: ${error.message}`);
-        }
-    }
-
-    displayFile(fileData) {
-        this.titleBar.textContent = fileData.displayTitle;
-        const lines = fileData.content.split('\n');
-
-        this.lineNumbers.innerHTML = Array.from(
-            { length: lines.length },
-            (_, i) => `<div class="line-number">${i + 1}</div>`
-        ).join('');
-
-        this.codeContent.innerHTML = lines.map(line =>
-            `<div class="code-line">${line || '&nbsp;'}</div>`
-        ).join('');
-    }
-
     showError(message) {
-        this.errorDisplay.textContent = message;
-        this.errorDisplay.style.display = message ? 'block' : 'none';
+        console.error(message);
+        
+        if (!this.frame) {
+            return;
+        }
+
+        const errorDisplay = this.frame.querySelector('.error-display');
+        if (errorDisplay) {
+            errorDisplay.textContent = message;
+            errorDisplay.style.display = message ? 'block' : 'none';
+        }
     }
 }
+
+// 修改初始化时机
+window.addEventListener('load', () => {
+    const codeFrame = new CodeFrame();
+    codeFrame.initialize();
+});
