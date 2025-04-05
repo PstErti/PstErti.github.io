@@ -601,18 +601,31 @@
     <script>
         class App {
             constructor() {
-                this.isDarkTheme = localStorage.getItem('theme') !== 'light';
+                // 检测系统主题
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                this.isDarkTheme = localStorage.getItem('theme') === null ?
+                    prefersDark : // 如果未设置过主题，则使用系统主题
+                    localStorage.getItem('theme') !== 'light';
+
                 this.fileManager = new FileManager();
                 this.themeButton = document.querySelector('.theme-switch');
                 this.init();
+
+                // 监听系统主题变化
+                window.matchMedia('(prefers-color-scheme: dark)')
+                    .addEventListener('change', e => {
+                        if (localStorage.getItem('theme') === null) {
+                            this.isDarkTheme = e.matches;
+                            this.applyTheme(this.isDarkTheme ? 'dark' : 'light');
+                        }
+                    });
             }
 
             init() {
                 this.applyTheme(this.isDarkTheme ? 'dark' : 'light');
                 this.setupEventListeners();
-                this.fileManager.loadDirectory().then(() => {
-                    this.fileManager.loadFile(CONFIG.defaultFile);
-                });
+                // 先加载目录显示文件列表
+                this.fileManager.loadDirectory('MainPage');
             }
 
             setupEventListeners() {

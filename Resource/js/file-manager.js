@@ -51,42 +51,57 @@ class FileManager {
         this.dropdownElement.classList.remove('show');
     }
 
-    async loadDirectory() {
+    async loadDirectory(directory = 'MainPage') {
         try {
             const response = await fetch(CONFIG.directoryFile);
             if (!response.ok) throw new Error('无法加载目录');
-            
+
             const files = await response.json();
             this.dropdownElement.innerHTML = '';
 
-            files.forEach(file => {
+            // 过滤出 MainPage 目录下的文件
+            const mainPageFiles = files.filter(file => file.path.startsWith(directory));
+
+            // 在菜单中显示文件名
+            mainPageFiles.forEach(file => {
                 const option = document.createElement('div');
                 option.className = 'menu-option';
                 option.textContent = file.name;
-                option.onclick = () => this.loadFile(`${CONFIG.basePath}/${file.path}`);
+                option.onclick = () => {
+                    // 点击时加载文件内容
+                    const filePath = `${CONFIG.basePath}/${file.path}`;
+                    this.loadContent(filePath);
+                };
                 this.dropdownElement.appendChild(option);
             });
+
+            // 如果有文件，加载第一个文件作为默认显示
+            if (mainPageFiles.length > 0) {
+                const firstFile = `${CONFIG.basePath}/${mainPageFiles[0].path}`;
+                this.loadContent(firstFile);
+            }
         } catch (error) {
             console.error('加载目录失败:', error);
+            this.handleError('无法加载目录列表');
         }
     }
 
-    async loadFile(filename) {
+    async loadContent(filename) {
         try {
             const response = await fetch(filename);
-            if (!response.ok) {
-                throw new Error(response.status === 404 ? 
-                    '文件未找到: ' + filename : 
-                    '网络响应错误: ' + response.status
-                );
-            }
-            
+            if (!response.ok) throw new Error('无法加载文件内容');
+
             const content = await response.text();
+            // 检查内容是否为HTML
+            if (content.trim().toLowerCase().startsWith('<!doctype html') ||
+                content.trim().toLowerCase().startsWith('<html')) {
+                throw new Error('无效的文件格式');
+            }
+
             this.renderContent(content, filename);
             this.closeMenu();
-            
         } catch (error) {
-            console.error('Error:', error);
+            console.error('加载内容失败:', error);
             this.handleError(error.message);
         }
     }
@@ -94,8 +109,8 @@ class FileManager {
     renderContent(content, filename) {
         const lines = content.split('\n');
         const escapedCode = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        const highlightedCode = window.Highlighter ? 
-            window.Highlighter.highlight(escapedCode) : 
+        const highlightedCode = window.Highlighter ?
+            window.Highlighter.highlight(escapedCode) :
             escapedCode;
         const highlightedLines = highlightedCode.split('\n');
 

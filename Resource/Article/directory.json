@@ -2,5 +2,9 @@
     {
         "name": "AboutPstErti.cpp",
         "path": "MainPage/AboutPstErti.cpp"
+    },
+    {
+        "name": "ThisWebsite.json",
+        "path": "MainPage/ThisWebsite.json"
     }
 ]
