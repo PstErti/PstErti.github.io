@@ -12,6 +12,8 @@ class CodeFrame {
             return;
         }
 
+        this.setupEventListeners();
+
         if (window.fileManager) {
             this.loadDirectory('MainPage');
         } else {
@@ -54,6 +56,26 @@ class CodeFrame {
         return true;
     }
 
+    setupEventListeners() {
+        const fileMenuBtn = document.getElementById('fileMenuBtn');
+        if (!fileMenuBtn) return;
+
+        document.addEventListener('click', e => {
+            const dropdown = document.getElementById('fileMenuDropdown');
+            if (dropdown && !fileMenuBtn.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        fileMenuBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            const dropdown = document.getElementById('fileMenuDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        });
+    }
+
     initMenuHandlers() {
         this.menuVisible = false;
         // 确保在setupFrame之后获取元素
@@ -88,7 +110,7 @@ class CodeFrame {
                 throw new Error('框架未正确初始化');
             }
 
-            const files = await window.fileManager.loadDirectory(path);
+            const files = await FileManager.getInstance().loadDirectory(path);
             if (!Array.isArray(files)) {
                 throw new Error('无效的文件列表格式');
             }
@@ -133,9 +155,10 @@ class CodeFrame {
     async displayFile(filePath) {
         try {
             const relativePath = filePath.replace(`${CONFIG.basePath}/`, '');
+            const fileManager = FileManager.getInstance();
             const [{ content, title }, lineCount] = await Promise.all([
-                window.fileManager.loadContent(relativePath),
-                window.fileManager.getLineCount(relativePath)
+                fileManager.loadContent(relativePath),
+                fileManager.getLineCount(relativePath)
             ]);
             
             const titleBar = this.frame.querySelector('.title');
@@ -199,8 +222,4 @@ class CodeFrame {
     }
 }
 
-// 修改初始化时机
-window.addEventListener('load', () => {
-    const codeFrame = new CodeFrame();
-    codeFrame.initialize();
-});
+// 删除自动初始化代码

@@ -1,18 +1,32 @@
+@keyframes footerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .footer-container {
+    position: relative;
     margin-top: auto;
-    /* 确保页脚在底部 */
     width: 100%;
     text-align: center;
     padding: 20px 0;
+    background: var(--color-background);
+    font-family: 'Source Han Sans & Saira Hybrid', monospace;
+    z-index: 1;
 }
 
 footer {
-    color: var(--color-menuText);
+    color: var(--color-foreground);
     font-size: 14px;
     text-align: center;
     margin-top: 50px;
     opacity: 0;
-    animation: fadeIn 1s ease-out 3s forwards;
+    animation: footerFadeIn 1s ease-out 1s forwards;
 }
 
 .links {
@@ -24,24 +38,25 @@ footer {
 
 .link {
     color: var(--color-link);
+    font-size: 16px;
     text-decoration: none;
     transition: color 0.3s;
     opacity: 0;
     transform: translateY(10px);
+    animation: footerFadeIn 0.5s ease-out forwards;
+    /* 计算每个链接的延迟时间: 基础延迟1.5s + (索引 × 0.2s) */
+    animation-delay: calc(1.5s + (var(--link-index, 0) * 0.2s));
 }
 
 .link:hover {
     color: var(--color-linkHover);
 }
 
-.link:nth-child(1) {
-    animation: fadeIn 0.5s ease-out 3.5s forwards;
-}
-
-.link:nth-child(2) {
-    animation: fadeIn 0.5s ease-out 3.7s forwards;
-}
-
-.link:nth-child(3) {
-    animation: fadeIn 0.5s ease-out 3.9s forwards;
+.copyright {
+    color: var(--color-foreground);
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+    opacity: 0;
+    animation: footerFadeIn 1s ease-out 1s forwards;
 }

@@ -1,12 +1,12 @@
 {
   "files": [
     {
-      "name": "AboutPstErti.cpp",
-      "path": "MainPage/AboutPstErti.cpp"
+      "name": "Metadata.json",
+      "path": "MainPage/Metadata.json"
     },
     {
-      "name": "ThisWebsite.txt",
-      "path": "MainPage/ThisWebsite.txt"
+      "name": "AboutPstErti.cpp",
+      "path": "MainPage/AboutPstErti.cpp"
     }
   ]
 }

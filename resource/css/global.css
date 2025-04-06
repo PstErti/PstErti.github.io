@@ -1,0 +1,33 @@
+@font-face {
+    font-family: 'Cascadia Code';
+    src: local("Cascadia Code"),
+        local("Cascadia-Code"),
+        url("../font/Cascadia Code/WOFF2.woff2") format("woff2"),
+        url("../font/Cascadia Code/WOFF.woff") format("woff"),
+        url("../font/Cascadia Code/EOT.eot") format("embedded-opentype"),
+        url("../font/Cascadia Code/TrueType.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'Source Han Sans & Saira Hybrid';
+    src: local("Source Han Sans & Saira Hybrid"),
+        local("Source-Han-Sans-&-Saira-Hybrid"),
+        url("../font/Source Han Sans & Saira Hybrid/WOFF2.woff2") format("woff2"),
+        url("../font/Source Han Sans & Saira Hybrid/WOFF.woff") format("woff"),
+        url("../font/Source Han Sans & Saira Hybrid/EOT.eot") format("embedded-opentype"),
+        url("../font/Source Han Sans & Saira Hybrid/TrueType.ttf") format("truetype");
+}
+
+:root {
+    --code-line-height: 24px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-background, #1e1e1e);
+    color: var(--color-foreground, #d4d4d4);
+    font-family: 'Source Han Sans & Saira Hybrid', monospace;
+    line-height: 1.6;
+    overflow-x: hidden;
+}

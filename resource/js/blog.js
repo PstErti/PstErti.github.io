@@ -1,28 +1,43 @@
 class BlogPage {
     constructor() {
-        // 立即应用主题，不等待 DOMContentLoaded
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const isDarkTheme = localStorage.getItem('theme') === null ?
+        this.isDarkTheme = localStorage.getItem('theme') === null ?
             prefersDark :
             localStorage.getItem('theme') !== 'light';
-        this.applyTheme(isDarkTheme ? 'dark' : 'light');
-
-        document.addEventListener('DOMContentLoaded', () => {
-            this.init();
+        
+        this.header = new Header({
+            title: 'Blog',
+            navLinks: [
+                { text: '主页', url: 'pages/home.html' },
+                { text: '博客', url: 'pages/blog.html' },
+                { text: '项目', url: 'pages/projects.html' },
+                { text: '关于', url: 'pages/about.html' }
+            ]
         });
+        this.footer = new Footer();
+
+        this.init();
+
+        window.matchMedia('(prefers-color-scheme: dark)')
+            .addEventListener('change', e => {
+                if (localStorage.getItem('theme') === null) {
+                    this.isDarkTheme = e.matches;
+                    this.applyTheme(this.isDarkTheme ? 'dark' : 'light');
+                }
+            });
+
+        const maintenance = MaintenanceMode.initialize();
+        maintenance.show();
     }
 
     init() {
-        this.header = new Header({ title: 'Blog' });
-        this.footer = new Footer();
-        this.initContent();
-
         this.header.inject('#header');
         this.header.onThemeSwitch = (theme) => this.applyTheme(theme);
-
-        // 设置初始主题图标
-        const currentTheme = localStorage.getItem('theme') || 'dark';
-        this.header.setThemeIcon(currentTheme === 'dark');
+        
+        this.initContent();
+        this.footer.inject('#footer');
+        
+        this.applyTheme(this.isDarkTheme ? 'dark' : 'light');
     }
 
     initContent() {
@@ -39,6 +54,17 @@ class BlogPage {
             document.documentElement.style.setProperty(`--color-${key}`, value);
         });
     }
+
+    // 添加切换维护模式的方法
+    toggleMaintenance(show) {
+        if (show) {
+            this.maintenanceMode.show();
+        } else {
+            this.maintenanceMode.hide();
+        }
+    }
 }
 
-new BlogPage();
+window.addEventListener('DOMContentLoaded', () => {
+    window.blogPage = new BlogPage();
+});

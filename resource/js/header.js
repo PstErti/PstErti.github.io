@@ -2,12 +2,12 @@ class Header {
     constructor(config = {}) {
         const defaultConfig = {
             logo: 'resource/texture/logo-PstErti-500x188.png',
-            title: 'PstErti',
+            title: 'Home',
             navLinks: [
-                { text: '主页', url: '#' },
-                { text: '博客', url: '#' },
-                { text: '项目', url: '#' },
-                { text: '关于', url: '#' }
+                { text: '主页', url: '/' },
+                { text: '博客', url: '/blog' },
+                { text: '项目', url: '/projects' },
+                { text: '关于', url: '/about' }
             ]
         };
 
@@ -41,12 +41,6 @@ class Header {
 
         // 获取当前页面路径
         const currentPath = window.location.pathname;
-        const navLinks = {
-            'index.html': '主页',
-            'pages/blog.html': '博客',
-            'pages/projects.html': '项目',
-            'pages/about.html': '关于'
-        };
 
         this.container.innerHTML = `
             <div class="header__left" style="display: flex; align-items: center; gap: 30px;">
@@ -57,10 +51,10 @@ class Header {
                 <div class="header__title header-title">${config.title || ''}</div>
                 <div class="divider header-divider"></div>
                 <nav class="header__nav" style="display: flex; gap: 15px;">
-                    ${Object.entries(navLinks).map(([path, text]) => {
-                        const isActive = currentPath.endsWith(path) || 
-                                       (path === 'index.html' && (currentPath === '/' || currentPath.endsWith('/')));
-                        return `<a href="${basePath}${path}" class="nav-link${isActive ? ' active' : ''}">${text}</a>`;
+                    ${config.navLinks.map(({text, url}) => {
+                        const isActive = currentPath.endsWith(url) || 
+                                       (url === 'index.html' && (currentPath === '/' || currentPath.endsWith('/')));
+                        return `<a href="${basePath}${url}" class="nav-link${isActive ? ' active' : ''}">${text}</a>`;
                     }).join('')}
                 </nav>
             </div>
@@ -70,6 +64,16 @@ class Header {
                 <img class="switch-icon moon" src="${basePath}resource/texture/moon.svg" alt="dark theme">
             </div>
         `;
+
+        // 为所有导航链接添加点击事件监听
+        const navLinks = this.container.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (link.classList.contains('active')) {
+                    e.preventDefault();
+                }
+            });
+        });
 
         // 修改事件监听的绑定方式
         this.themeSwitch = this.container.querySelector('.theme-switch');

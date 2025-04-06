@@ -21,8 +21,10 @@
 
 /* 集成 editor 样式 */
 .code-frame {
-    width: calc(100% - 60px);
-    max-width: 900px;
+    width: calc(100% - 40px);  /* 左右各留出20px边距 */
+    max-width: 1200px;  /* 添加最大宽度限制 */
+    margin: 0 auto;
+    box-sizing: border-box;
     border-radius: 5px; 
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -33,9 +35,47 @@
     animation: fadeIn 0.8s ease-out forwards;
 }
 
+.code-frame__content {
+    display: flex;
+    overflow-x: auto;
+    width: 100%;
+    max-width: 100%;
+    flex: 1;
+    position: relative;
+    background: var(--color-background);
+    font-family: 'Cascadia Code', monospace;
+    line-height: var(--code-line-height);
+    overflow: auto;
+}
+
+.code-frame__line-numbers {
+    flex-shrink: 0;
+    padding: 10px;
+    width: 60px;
+    padding: 20px 0;
+    text-align: right;
+    color: #858585;
+    user-select: none;
+    background: var(--color-background);
+    border-right: 1px solid #333;
+}
+
+.code-frame__code {
+    flex: 1;
+    min-width: 0;  /* 防止flex子项溢出 */
+    padding: 10px;
+    overflow-x: auto;
+    padding: 20px;
+    color: var(--color-menuText);
+    white-space: pre;
+    overflow-x: auto;
+}
+
 /* 响应式布局 */
 @media screen and (max-width: 768px) {
     .code-frame {
+        width: calc(100% - 40px);  /* 保持一致的边距 */
+        font-size: 14px;
         width: calc(100% - 20px);
         margin: 10px;
     }
@@ -89,6 +129,39 @@
     }
 }
 
+@media screen and (min-width: 1440px) {
+    .main-container {
+        padding: 60px 20px;
+    }
+    
+    .code-frame {
+        width: 90%;
+        max-width: 1200px;
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    .main-container {
+        padding: 60px 40px;
+    }
+
+    .code-frame {
+        width: 80%;
+        max-width: 1400px;
+    }
+
+    .code-frame__content {
+        font-size: 16px;
+    }
+}
+
+@media screen and (min-width: 2560px) {
+    .code-frame {
+        width: 70%;
+        max-width: 1600px;
+    }
+}
+
 @media screen and (max-width: 480px) {
     .code-frame {
         width: calc(100% - 30px);
@@ -116,21 +189,6 @@
 
     .line-number {
         padding-right: 10px;
-    }
-}
-
-@media screen and (min-width: 1920px) {
-    .code-frame {
-        max-width: 1200px;
-    }
-
-    .code-frame__content {
-        font-size: 16px;
-    }
-
-    .title {
-        font-size: 14px;
-        max-width: 300px;
     }
 }
 
@@ -339,23 +397,6 @@
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-.links {
-    margin-top: 30px;
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-}
-
-.link {
-    color: var(--color-menuText);
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.link:hover {
-    color: #fff;
 }
 
 .error-display {

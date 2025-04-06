@@ -1,9 +1,32 @@
 class FileManager {
+    static instance = null;
+
+    static getInstance() {
+        if (!FileManager.instance) {
+            FileManager.instance = new FileManager();
+        }
+        return FileManager.instance;
+    }
+
     constructor() {
+        if (FileManager.instance) {
+            return FileManager.instance;
+        }
         this.initialized = true;
+        FileManager.instance = this;
+        return this;
+    }
+
+    checkInitialization() {
+        if (!this.initialized) {
+            console.error('FileManager 未正确初始化');
+            return false;
+        }
+        return true;
     }
 
     async loadDirectory(directory) {
+        if (!this.checkInitialization()) return;
         try {
             const response = await fetch(`${CONFIG.basePath}/${directory}/directory.json`);
             if (!response.ok) throw new Error('无法加载目录');
@@ -25,6 +48,7 @@ class FileManager {
     }
 
     async loadContent(filename) {
+        if (!this.checkInitialization()) return;
         try {
             // 修正路径拼接问题
             const fullPath = `${CONFIG.basePath}/${filename}`;
@@ -50,6 +74,7 @@ class FileManager {
     }
 
     async getLineCount(filename) {
+        if (!this.checkInitialization()) return;
         try {
             const fullPath = `${CONFIG.basePath}/${filename}`;
             const response = await fetch(fullPath);
@@ -79,6 +104,7 @@ class FileManager {
     }
 
     renderContent(content, filename) {
+        if (!this.checkInitialization()) return;
         const lines = content.split('\n');
         // 预处理时保留原始格式
         const preprocessedContent = this.preprocessContent(content);
@@ -94,6 +120,7 @@ class FileManager {
     }
 
     renderLines(lineCount, highlightedLines) {
+        if (!this.checkInitialization()) return;
         this.codeContent.innerHTML = '';
         this.lineNumbers.innerHTML = '';
         const fragment = document.createDocumentFragment();
@@ -115,13 +142,12 @@ class FileManager {
     }
 
     handleError(message) {
+        if (!this.checkInitialization()) return;
         this.codeContent.innerHTML = message;
         this.lineNumbers.innerHTML = '';
         this.titleElement.textContent = '加载失败';
     }
 }
 
-// 修改初始化时机
-window.addEventListener('DOMContentLoaded', () => {
-    window.fileManager = new FileManager();
-});
+// 自动初始化全局实例
+window.fileManager = FileManager.getInstance();
