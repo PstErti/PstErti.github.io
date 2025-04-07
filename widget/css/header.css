@@ -4,7 +4,7 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    background: var(--color-foreBackground);
+    background: var(--color-headerBg);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
     padding: 15px 50px;
