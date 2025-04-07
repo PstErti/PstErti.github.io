@@ -2,6 +2,7 @@ const ThemeManager = {
     themes: {
         dark: {
             background: '#1e1e1e',
+            foreBackground: '#2d2d2d',
             foreground: '#d4d4d4',
             headerBg: 'rgba(30, 30, 30, 0.8)',
             headerText: '#d4d4d4',
@@ -11,7 +12,6 @@ const ThemeManager = {
             menuOptionHover: '#3d3d3d',
             menuDropdownBg: '#2d2d2d',
             menuDropdownShadow: 'rgba(0, 0, 0, 0.3)',
-            titleBar: '#2d2d2d',
             accentColor: '#569CD6',
             accentColor2: '#9CDCFE',
             logoTint: 'invert(23%) sepia(80%) saturate(1900%) hue-rotate(190deg) brightness(90%)',  // 深蓝色
@@ -19,7 +19,8 @@ const ThemeManager = {
             linkHover: '#0078d4'  
         },
         light: {
-            background: '#ffffff',
+            background: '#f5f5f5',
+            foreBackground: '#ffffff',
             foreground: '#1e1e1e',
             headerBg: 'rgba(255, 255, 255, 0.8)',
             headerText: '#1e1e1e',
@@ -29,7 +30,6 @@ const ThemeManager = {
             menuOptionHover: '#e0e0e0',
             menuDropdownBg: '#ffffff',
             menuDropdownShadow: 'rgba(0, 0, 0, 0.1)',
-            titleBar: '#f3f3f3',
             accentColor: '#0078D4',
             accentColor2: '#28A8EA',
             logoTint: 'invert(70%) sepia(20%) saturate(1800%) hue-rotate(177deg) brightness(102%)',  // 浅蓝色

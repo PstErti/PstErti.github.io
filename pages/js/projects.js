@@ -1,4 +1,4 @@
-class AboutPage {
+class ProjectPage {
     constructor() {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         this.isDarkTheme = localStorage.getItem('theme') === null ?
@@ -6,7 +6,7 @@ class AboutPage {
             localStorage.getItem('theme') !== 'light';
 
         this.header = new Header({
-            title: 'About',
+            title: 'Projects',
             navLinks: [
                 { text: '主页', url: 'pages/home.html' },
                 { text: '博客', url: 'pages/blog.html' },
@@ -26,7 +26,7 @@ class AboutPage {
                 }
             });
 
-
+        // Uncomment the following lines to enable maintenance mode
         const maintenance = MaintenanceMode.initialize();
         maintenance.show();
     }
@@ -54,8 +54,9 @@ class AboutPage {
             document.documentElement.style.setProperty(`--color-${key}`, value);
         });
     }
+
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    window.aboutPage = new AboutPage();
+    window.projectPage = new ProjectPage();
 });

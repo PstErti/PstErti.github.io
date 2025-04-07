@@ -1,12 +1,12 @@
-class BlogPage {
+class AboutPage {
     constructor() {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         this.isDarkTheme = localStorage.getItem('theme') === null ?
             prefersDark :
             localStorage.getItem('theme') !== 'light';
-        
+
         this.header = new Header({
-            title: 'Blog',
+            title: 'About',
             navLinks: [
                 { text: '主页', url: 'pages/home.html' },
                 { text: '博客', url: 'pages/blog.html' },
@@ -26,6 +26,7 @@ class BlogPage {
                 }
             });
 
+        // Uncomment the following lines to enable maintenance mode
         const maintenance = MaintenanceMode.initialize();
         maintenance.show();
     }
@@ -33,10 +34,9 @@ class BlogPage {
     init() {
         this.header.inject('#header');
         this.header.onThemeSwitch = (theme) => this.applyTheme(theme);
-        
-        this.initContent();
         this.footer.inject('#footer');
-        
+        this.initContent();
+
         this.applyTheme(this.isDarkTheme ? 'dark' : 'light');
     }
 
@@ -54,17 +54,8 @@ class BlogPage {
             document.documentElement.style.setProperty(`--color-${key}`, value);
         });
     }
-
-    // 添加切换维护模式的方法
-    toggleMaintenance(show) {
-        if (show) {
-            this.maintenanceMode.show();
-        } else {
-            this.maintenanceMode.hide();
-        }
-    }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    window.blogPage = new BlogPage();
+    window.aboutPage = new AboutPage();
 });

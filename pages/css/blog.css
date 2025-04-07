@@ -1,0 +1,23 @@
+:root {
+    --code-line-height: 24px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-background, #1e1e1e);
+    color: var(--color-foreground, #d4d4d4);
+    font-family: 'Source Han Sans & Saira Hybrid', monospace;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.main-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 60px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--color-background);
+}
