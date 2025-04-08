@@ -38,7 +38,7 @@ class CodeFrame {
                         <div class="dot dot-yellow"></div>
                         <div class="dot dot-green"></div>
                     </div>
-                    <div class="title active">AboutPstErti.cpp</div>
+                    <div class="title active">FileTitle</div>
                 </div>
                 <div class="file-menu">
                     <span class="menu-item" id="fileMenuBtn">文件</span>

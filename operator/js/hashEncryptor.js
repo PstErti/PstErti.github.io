@@ -250,14 +250,14 @@ class HashEncryptor {
     }
 
     _combineResults(segments) {
-        const targetLength = 128;
-        const chunkSize = 32;
+        const targetLength = 64;
+        const chunkSize = 16;
         const normalizedSegments = segments.map(segment => {
             return segment.slice(0, chunkSize).padEnd(chunkSize, segment);
         });
         
         let result = '';
-        // 对于每个字符位置（0-31）
+        // 对于每个字符位置（0-15）
         for (let pos = 0; pos < chunkSize; pos++) {
             // 从每个段中取出对应位置的字符
             for (let segIndex = 0; segIndex < normalizedSegments.length; segIndex++) {

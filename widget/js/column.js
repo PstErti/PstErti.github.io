@@ -1,4 +1,4 @@
-class BlogColumn {
+class Column {
     constructor(options) {
         this.title = options.title || '';
         this.content = options.content || '';
@@ -11,22 +11,22 @@ class BlogColumn {
     init() {
         // 创建DOM元素
         this.element = document.createElement('div');
-        this.element.className = 'blog-column';
+        this.element.className = 'column';
 
         // 设置HTML结构
         this.element.innerHTML = `
-            <div class="blog-column__bg" style="background-image: url(${this.bgImage})"></div>
-            <div class="blog-column__content">
-                <h3 class="blog-column__title">${this.title}</h3>
-                <p class="blog-column__text">${this.content}</p>
-                <a href="${this.link}" class="blog-column__link">打开专栏</a>
+            <div class="column__bg" style="background-image: url(${this.bgImage})"></div>
+            <div class="column__content">
+                <h3 class="column__title">${this.title}</h3>
+                <p class="column__text">${this.content}</p>
+                <a href="${this.link}" class="column__link">打开专栏</a>
             </div>
         `;
 
         // 添加点击事件
         this.element.addEventListener('click', (e) => {
             // 如果点击的不是链接本身，则触发跳转
-            if (!e.target.classList.contains('blog-column__link')) {
+            if (!e.target.classList.contains('column__link')) {
                 window.location.href = this.link;
             }
         });
@@ -104,4 +104,4 @@ class BlogColumn {
 }
 
 // 导出BlogColumn类
-window.BlogColumn = BlogColumn;
+window.Column = Column;

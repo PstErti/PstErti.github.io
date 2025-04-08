@@ -79,7 +79,7 @@ class BlogPage {
 
         // 初始化并挂载所有博客专栏
         columns.forEach(columnData => {
-            const column = new BlogColumn(columnData);
+            const column = new Column(columnData);
             column.mount(content);
         });
     }
